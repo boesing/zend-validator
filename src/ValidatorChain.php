@@ -15,7 +15,8 @@ use Zend\ServiceManager\ServiceManager;
 
 class ValidatorChain implements
     Countable,
-    ValidatorInterface
+    ValidatorInterface,
+    ValidatorPluginManagerAwareInterface
 {
     /**
      * Default priority at which validators are added
@@ -63,13 +64,11 @@ class ValidatorChain implements
      * Get plugin manager instance
      *
      * @return ValidatorPluginManager
+     * @deprecated Please use {@see ValidatorChain::getValidatorPluginManager} instead.
      */
     public function getPluginManager()
     {
-        if (! $this->plugins) {
-            $this->setPluginManager(new ValidatorPluginManager(new ServiceManager));
-        }
-        return $this->plugins;
+        return $this->getValidatorPluginManager();
     }
 
     /**
@@ -77,6 +76,7 @@ class ValidatorChain implements
      *
      * @param  ValidatorPluginManager $plugins Plugin manager
      * @return ValidatorChain
+     * @deprecated Please use {@see ValidatorChain::setValidatorPluginManager} instead.
      */
     public function setPluginManager(ValidatorPluginManager $plugins)
     {
@@ -323,5 +323,29 @@ class ValidatorChain implements
     public function __sleep()
     {
         return ['validators', 'messages'];
+    }
+
+    /**
+     * Set validator plugin manager
+     *
+     * @param ValidatorPluginManager $pluginManager
+     */
+    public function setValidatorPluginManager(ValidatorPluginManager $pluginManager)
+    {
+        $this->plugins = $pluginManager;
+    }
+
+    /**
+     * Get validator plugin manager
+     *
+     * @return ValidatorPluginManager
+     */
+    public function getValidatorPluginManager()
+    {
+        if (! $this->plugins) {
+            $this->setValidatorPluginManager(new ValidatorPluginManager(new ServiceManager));
+        }
+
+        return $this->plugins;
     }
 }
