@@ -80,7 +80,7 @@ class ValidatorChain implements
      */
     public function setPluginManager(ValidatorPluginManager $plugins)
     {
-        $this->plugins = $plugins;
+        $this->setValidatorPluginManager($plugins);
         return $this;
     }
 
